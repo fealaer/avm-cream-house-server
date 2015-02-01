@@ -94,9 +94,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 
 // enable CORS
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://192.168.1.4");
   res.header("Access-Control-Allow-Origin", "http://localhost");
-  res.header("Access-Control-Allow-Origin", "https://avm-cream-house-server.herokuapp.com/");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-CSRF-TOKEN, x-csrf-token, *");
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 //  res.header('x-csrf-token', req.session['_csrfSecret']);
