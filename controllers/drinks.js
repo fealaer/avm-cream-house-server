@@ -53,8 +53,8 @@ exports.rateDrink = function (req, res) {
           drink_id: req.body.id,
           comment: req.body.comment,
           posted_at: new Date(),
+          email: user.email,
           profile: {
-            email: user.email,
             name: user.profile.name,
             picture: user.profile.picture
           }
