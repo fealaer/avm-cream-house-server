@@ -24,8 +24,8 @@ exports.getLogin = function(req, res) {
  * Sign in using email and password.
  */
 exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.assert('email', 'Email is not valid.').isEmail();
+  req.assert('password', 'Password cannot be blank.').notEmpty();
 
   var errors = req.validationErrors(true);
 
@@ -81,9 +81,9 @@ exports.getSignup = function(req, res) {
  * Create a new local account.
  */
 exports.postSignup = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('email', 'Email is not valid.').isEmail();
+  req.assert('password', 'Password must be at least 4 characters long.').len(4);
+  req.assert('confirmPassword', 'Passwords do not match.').equals(req.body.password);
 
   var errors = req.validationErrors(true);
 
@@ -202,8 +202,8 @@ exports.postUpdateProfile = function(req, res, next) {
  * Update current password.
  */
 exports.postUpdatePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('password', 'Password must be at least 4 characters long.').len(4);
+  req.assert('confirmPassword', 'Passwords do not match.').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -286,7 +286,7 @@ exports.getReset = function(req, res) {
  */
 exports.postReset = function(req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+  req.assert('confirm', 'Passwords do not match.').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -362,7 +362,7 @@ exports.getForgot = function(req, res) {
  * Create a random token, then the send user an email with a reset link.
  */
 exports.postForgot = function(req, res, next) {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+  req.assert('email', 'Email is not valid.').isEmail();
 
   var errors = req.validationErrors();
 
