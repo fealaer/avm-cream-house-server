@@ -13,7 +13,8 @@ var drinkSchema = new mongoose.Schema({
       five: { type: Number, default: 0 }
     }
   },
-  price: { type: Number, default: 0 },
+  price250: { type: Number, default: 0 },
+  price500: { type: Number, default: 0 },
   totalComments: { type: Number, default: 0 },
   comments: Array
 });
