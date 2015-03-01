@@ -115,6 +115,24 @@ exports.postSignup = function(req, res, next) {
           var jsonResponse = new JsonResponse(new JsonError(err), null);
           return res.status(jsonResponse.status.code).json(jsonResponse);
         } else {
+          var transporter = nodemailer.createTransport({
+            service: 'Mandrill',
+            auth: {
+              user: secrets.mandrill.user,
+              pass: secrets.mandrill.password
+            }
+          });
+          var mailOptions = {
+            to: user.email,
+            from: 'apush_public@yahoo.com',
+            subject: 'Thank you for registering with AVM Cream House application!',
+            text: 'Hello, ' + user.profile.name + '\n\n' +
+              'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+          };
+          transporter.sendMail(mailOptions, function(err) {
+            req.flash('success', { msg: 'Success! Your password has been changed.' });
+            done(err);
+          });
           var jsonResponse = new JsonResponse(null, user);
           return res.status(jsonResponse.status.code).json(jsonResponse);
         }
@@ -328,8 +346,8 @@ exports.postReset = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Your Hackathon Starter password has been changed',
+        from: 'apush_public@yahoo.com',
+        subject: 'Your AVM Cream House password has been changed',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
@@ -403,8 +421,8 @@ exports.postForgot = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Reset your password on Hackathon Starter',
+        from: 'apush_public@yahoo.com',
+        subject: 'Reset your password on AVM Cream House',
         text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
           'http://' + req.headers.host + '/reset/' + token + '\n\n' +
