@@ -131,8 +131,9 @@ exports.postSignup = function(req, res, next) {
               'We hope that this application will help you choose your next drink and discover new flavors and fruits!'
           };
           transporter.sendMail(mailOptions, function(err) {
-            req.flash('success', { msg: 'Success! Your password has been changed.' });
-            done(err);
+            if (err) {
+              console.log(err);
+            }
           });
           var jsonResponse = new JsonResponse(null, user);
           return res.status(jsonResponse.status.code).json(jsonResponse);
