@@ -113,6 +113,7 @@ app.get('/signup', userController.getSignup); // unused
 app.get('/contact', contactController.getContact); // unused
 app.post('/contact', contactController.postContact); // unused
 app.get('/account', passportConf.isAuthenticated, userController.getAccount); // unused
+app.get('/reset/:token', userController.getReset); // unused
 
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -129,9 +130,9 @@ app.post('/drinks/rate', passportConf.isAuthenticated, drinksController.rateDrin
 
 app.get('/comments/:id/:before', passportConf.isAuthenticated, commentController.getMore);
 
-app.post('/forgot', userController.postForgot); // todo change response to JSON
-app.get('/reset/:token', userController.getReset); // todo change response to JSON
-app.post('/reset/:token', userController.postReset); // todo change response to JSON
+app.post('/forgot', userController.postForgot);
+app.post('/reset', userController.postReset);
+
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile); // todo change response to JSON
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword); // todo change response to JSON
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount); // todo change response to JSON

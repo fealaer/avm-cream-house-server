@@ -124,10 +124,11 @@ exports.postSignup = function(req, res, next) {
           });
           var mailOptions = {
             to: user.email,
-            from: 'apush_public@yahoo.com',
+            from: 'avm.cream.house.cafe@gmail.com',
             subject: 'Thank you for registering with AVM Cream House application!',
             text: 'Hello, ' + user.profile.name + '\n\n' +
-              'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+              'This is a confirmation that you have successfully registered with AVM Cream House application!\n\n' +
+              'We hope that this application will help you choose your next drink and discover new flavors and fruits!'
           };
           transporter.sendMail(mailOptions, function(err) {
             req.flash('success', { msg: 'Success! Your password has been changed.' });
@@ -303,25 +304,26 @@ exports.getReset = function(req, res) {
  * Process the reset password request.
  */
 exports.postReset = function(req, res, next) {
+  req.assert('token', 'Token cannot be blank.').notEmpty();
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
   req.assert('confirm', 'Passwords do not match.').equals(req.body.password);
 
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('back');
+    var jsonResponse = new JsonResponse(new JsonError({name: 'ExpressValidationError', errors: errors}), null);
+    return res.status(jsonResponse.status.code).json(jsonResponse);
   }
 
   async.waterfall([
     function(done) {
       User
-        .findOne({ resetPasswordToken: req.params.token })
+        .findOne({ resetPasswordToken: req.body.token })
         .where('resetPasswordExpires').gt(Date.now())
         .exec(function(err, user) {
           if (!user) {
-            req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
-            return res.redirect('back');
+            var jsonResponse = new JsonResponse(new JsonError(null, 400, 'Password reset token is invalid or has expired.'), null);
+            return res.status(jsonResponse.status.code).json(jsonResponse);
           }
 
           user.password = req.body.password;
@@ -329,7 +331,10 @@ exports.postReset = function(req, res, next) {
           user.resetPasswordExpires = undefined;
 
           user.save(function(err) {
-            if (err) return next(err);
+            if (err) {
+              var jsonResponse = new JsonResponse(new JsonError(err), null);
+              return res.status(jsonResponse.status.code).json(jsonResponse);
+            }
             req.logIn(user, function(err) {
               done(err, user);
             });
@@ -346,19 +351,23 @@ exports.postReset = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'apush_public@yahoo.com',
+        from: 'avm.cream.house.cafe@gmail.com',
         subject: 'Your AVM Cream House password has been changed',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('success', { msg: 'Success! Your password has been changed.' });
         done(err);
       });
     }
   ], function(err) {
-    if (err) return next(err);
-    res.redirect('/');
+    if (err) {
+      var jsonResponse = new JsonResponse(new JsonError(err), null);
+      return res.status(jsonResponse.status.code).json(jsonResponse);
+    } else {
+      var jsonResponse = new JsonResponse(null, {message: 'Your password has been changed.'});
+      return res.status(jsonResponse.status.code).json(jsonResponse);
+    }
   });
 };
 
@@ -385,8 +394,8 @@ exports.postForgot = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/forgot');
+    var jsonResponse = new JsonResponse(new JsonError({name: 'ExpressValidationError', errors: errors}), null);
+    return res.status(jsonResponse.status.code).json(jsonResponse);
   }
 
   async.waterfall([
@@ -399,8 +408,8 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          req.flash('errors', { msg: 'No account with that email address exists.' });
-          return res.redirect('/forgot');
+          var jsonResponse = new JsonResponse(new JsonError(null, 400, 'No account with that email address exists.'), null);
+          return res.status(jsonResponse.status.code).json(jsonResponse);
         }
 
         user.resetPasswordToken = token;
@@ -421,20 +430,24 @@ exports.postForgot = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'apush_public@yahoo.com',
+        from: 'avm.cream.house.cafe@gmail.com',
         subject: 'Reset your password on AVM Cream House',
         text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'Please copy and paste this token into token field in your application to complete the process:\n\n' +
+          '\t\t\ttoken: ' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('info', { msg: 'An e-mail has been sent to ' + user.email + ' with further instructions.' });
         done(err, 'done');
       });
     }
   ], function(err) {
-    if (err) return next(err);
-    res.redirect('/forgot');
+    if (err) {
+      var jsonResponse = new JsonResponse(new JsonError(err), null);
+      return res.status(jsonResponse.status.code).json(jsonResponse);
+    } else {
+      var jsonResponse = new JsonResponse(null, {message: 'An e-mail has been sent to your email with further instructions.'});
+      return res.status(jsonResponse.status.code).json(jsonResponse);
+    }
   });
 };
