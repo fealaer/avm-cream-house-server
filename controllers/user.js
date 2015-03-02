@@ -358,17 +358,16 @@ exports.postReset = function(req, res, next) {
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        done(err);
+        done(err, 'done');
       });
     }
-  ], function(err) {
+  ], function(err, result) {
     if (err) {
       var jsonResponse = new JsonResponse(new JsonError(err), null);
       return res.status(jsonResponse.status.code).json(jsonResponse);
-    } else {
-      var jsonResponse = new JsonResponse(null, {message: 'Your password has been changed.'});
-      return res.status(jsonResponse.status.code).json(jsonResponse);
     }
+    var jsonResponse = new JsonResponse(null, {message: 'Your password has been changed.'});
+    return res.status(jsonResponse.status.code).json(jsonResponse);
   });
 };
 
@@ -442,13 +441,12 @@ exports.postForgot = function(req, res, next) {
         done(err, 'done');
       });
     }
-  ], function(err) {
+  ], function(err, result) {
     if (err) {
       var jsonResponse = new JsonResponse(new JsonError(err), null);
       return res.status(jsonResponse.status.code).json(jsonResponse);
-    } else {
-      var jsonResponse = new JsonResponse(null, {message: 'An e-mail has been sent to your email with further instructions.'});
-      return res.status(jsonResponse.status.code).json(jsonResponse);
     }
+    var jsonResponse = new JsonResponse(null, {message: 'An e-mail has been sent to your email with further instructions.'});
+    return res.status(jsonResponse.status.code).json(jsonResponse);
   });
 };
