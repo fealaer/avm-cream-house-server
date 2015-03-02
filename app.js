@@ -125,6 +125,9 @@ app.post('/account/signup', userController.postSignup);
 app.get('/account/profile', passportConf.isAuthenticated, userController.getAccountProfile);
 app.post('/account/save/drink', passportConf.isAuthenticated, userController.saveDrink);
 
+app.post('/account/forgot', userController.postForgot);
+app.post('/account/reset', userController.postReset);
+
 app.get('/drinks', passportConf.isAuthenticated, drinksController.getDrinks);
 app.post('/drinks/rate', passportConf.isAuthenticated, drinksController.rateDrink);
 
