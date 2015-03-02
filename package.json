@@ -1,9 +1,9 @@
 {
-  "name": "hackathon-starter",
-  "version": "3.0.0",
+  "name": "avm-cream-house",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/fealaer/avm-cream-house-server.git"
   },
   "scripts": {
     "start": "node app.js",
