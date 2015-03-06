@@ -13,8 +13,8 @@ exports.getMore = function(req, res) {
   Comment
     .where('drink_id').equals(id)
     .where('posted_at').lt(before)
+    .sort({'posted_at': -1})
     .limit(10)
-    .sort('-posted_at')
     .exec(function(err, comments) {
       if (err) {
         var jsonResponse = new JsonResponse(new JsonError(err), null);
