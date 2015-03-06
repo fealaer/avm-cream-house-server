@@ -102,7 +102,7 @@ exports.postSignup = function(req, res, next) {
 
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
-      var jsonResponse = new JsonResponse(new JsonError(null, 400, 'Account with that email address already exists.'), null);
+      var jsonResponse = new JsonResponse(new JsonError(null, 400, 'Account with this email address already exists.'), null);
       return res.status(jsonResponse.status.code).json(jsonResponse);
     }
     user.save(function(err) {
@@ -128,7 +128,7 @@ exports.postSignup = function(req, res, next) {
             subject: 'Thank you for registering with AVM Cream House application!',
             text: 'Hello, ' + user.profile.name + '\n\n' +
               'This is a confirmation that you have successfully registered with AVM Cream House application!\n\n' +
-              'We hope that this application will help you choose your next drink and discover new flavors and fruits!'
+              'We hope that this application will help you to choose your next drink and discover new flavors and fruits!'
           };
           transporter.sendMail(mailOptions, function(err) {
             if (err) {
@@ -408,7 +408,7 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          var jsonResponse = new JsonResponse(new JsonError(null, 400, 'No account with that email address exists.'), null);
+          var jsonResponse = new JsonResponse(new JsonError(null, 400, 'No account with this email address exists.'), null);
           return res.status(jsonResponse.status.code).json(jsonResponse);
         }
 
